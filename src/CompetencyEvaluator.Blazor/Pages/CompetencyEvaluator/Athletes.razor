@@ -1,0 +1,364 @@
+@page "/CompetencyEvaluator/Athletes"
+
+
+
+@attribute [Authorize(CompetencyEvaluatorPermissions.Athletes.Default)]
+@using global::CompetencyEvaluator.Athletes
+@using global::CompetencyEvaluator.Localization
+@using global::CompetencyEvaluator.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using global::CompetencyEvaluator.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits CompetencyEvaluatorComponentBase
+@inject IAthletesAppService AthletesAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Athletes"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Form id="AthleteSearchForm" class="mb-3">
+            <Addons>
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @bind-Text="@Filter.FilterText"
+                              Autofocus="true"
+                              Placeholder="@L["Search"]">
+                    </TextEdit>
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <SubmitButton Form="AthleteSearchForm" Clicked="GetAthletesAsync">
+                        <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                    </SubmitButton>
+                </Addon>
+            </Addons>
+        </Form>
+        
+        <Row Class="mt-3 mb-3"> 
+            <div class="col-md-12">
+                <a href="javascript:;" class="text-decoration-none" @onclick="() => ShowAdvancedFilters = !ShowAdvancedFilters">@L["SeeAdvancedFilters"]</a>
+            </div>
+        </Row>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Name"]</FieldLabel>
+                        <TextEdit Text="@Filter.Name" TextChanged="@OnNameChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinDateOfBirth"]</FieldLabel>
+                        <DatePicker TValue="DateTime?"
+            InputMode="DateInputMode.Date"
+            Date="@Filter.DateOfBirthMin"
+            DateChanged="@OnDateOfBirthMinChangedAsync"
+            Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxDateOfBirth"]</FieldLabel>
+                        <DatePicker TValue="DateTime?"
+            InputMode="DateInputMode.Date"
+            Date="@Filter.DateOfBirthMax"
+            DateChanged="@OnDateOfBirthMaxChangedAsync"
+            Placeholder="@string.Empty" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Gender"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.GenderId"
+		SelectedValueChanged="@OnGenderIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in GendersCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Category"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.CategoryId"
+		SelectedValueChanged="@OnCategoryIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in CategoriesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="AthleteWithNavigationPropertiesDto"
+                  Data="AthleteList"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="AthleteWithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="AthleteWithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="AthleteWithNavigationPropertiesDto"
+                                          Visible="@CanEditAthlete"
+                                          Clicked="async () => await OpenEditAthleteModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="AthleteWithNavigationPropertiesDto"
+                                          Visible="@CanDeleteAthlete"
+                                          Clicked="() => DeleteAthleteAsync(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="AthleteWithNavigationPropertiesDto"
+                      Field="Athlete.Name"
+                      Caption="@L["Name"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AthleteWithNavigationPropertiesDto"
+                      Field="Athlete.DateOfBirth"
+                      Caption="@L["DateOfBirth"]">
+                  <DisplayTemplate>
+                        @context.Athlete.DateOfBirth.ToShortDateString()
+                  </DisplayTemplate>
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AthleteWithNavigationPropertiesDto"
+                      Field="Gender.name"
+                      Caption="@L["Gender"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="AthleteWithNavigationPropertiesDto"
+                      Field="Category.Name"
+                      Caption="@L["Category"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateAthleteModal" Closing="@CreateAthleteModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateAthleteForm">
+            <ModalHeader>
+                <ModalTitle>@L["NewAthlete"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateAthleteModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewAthleteValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewAthlete"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Name"] *</FieldLabel>
+                            <TextEdit @bind-Text="@NewAthlete.Name" MaxLength="AthleteConsts.NameMaxLength" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["DateOfBirth"]</FieldLabel>
+                            <DateEdit TValue="DateTime" InputMode="DateInputMode.DateTime" @bind-Date="@NewAthlete.DateOfBirth" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["Gender"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewAthlete.GenderId">
+                            @foreach (var gender in GendersCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@gender.Id">
+                                    @gender.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Category"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewAthlete.CategoryId">
+                            @foreach (var category in CategoriesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@category.Id">
+                                    @category.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateAthleteModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateAthleteForm" Clicked="CreateAthleteAsync" />
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditAthleteModal" Closing="@EditAthleteModal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditAthleteForm">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditAthleteModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingAthleteValidations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingAthlete"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Name"] *</FieldLabel>
+                            <TextEdit @bind-Text="@EditingAthlete.Name" MaxLength="AthleteConsts.NameMaxLength" >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["DateOfBirth"]</FieldLabel>
+                            <DateEdit TValue="DateTime" InputMode="DateInputMode.DateTime" @bind-Date="@EditingAthlete.DateOfBirth" >
+                               <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </DateEdit>
+                        </Field>
+                    </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["Gender"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingAthlete.GenderId">
+                            @foreach (var gender in GendersCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@gender.Id">
+                                    @gender.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    <Field>
+                        <FieldLabel>@L["Category"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingAthlete.CategoryId">
+                            @foreach (var category in CategoriesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@category.Id">
+                                    @category.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditAthleteModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditAthleteForm" Clicked="UpdateAthleteAsync" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>

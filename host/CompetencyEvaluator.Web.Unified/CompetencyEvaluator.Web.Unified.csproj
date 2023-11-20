@@ -1,0 +1,91 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <Import Project="..\..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <RootNamespace>CompetencyEvaluator</RootNamespace>
+    <PreserveCompilationReferences>true</PreserveCompilationReferences>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Volo.Abp.Autofac" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Mvc.UI.Theme.Lepton" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.LeptonTheme.Management.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.LeptonTheme.Management.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.LeptonTheme.Management.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.LeptonTheme.Management.Domain" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.EntityFrameworkCore.SqlServer" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Swashbuckle" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.AuditLogging.EntityFrameworkCore" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.AuditLogging.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.AuditLogging.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.AuditLogging.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Account.Pro.Public.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Account.Pro.Public.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Account.Pro.Public.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Account.Pro.Admin.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Account.Pro.Admin.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Account.Pro.Admin.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.SettingManagement.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.SettingManagement.EntityFrameworkCore" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.EntityFrameworkCore" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Identity.Pro.EntityFrameworkCore" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Identity.Pro.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Identity.Pro.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.Identity.Pro.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.EntityFrameworkCore" Version="7.4.2" />
+    <PackageReference Include="Volo.Saas.Host.Web" Version="7.4.2" />
+    <PackageReference Include="Volo.Saas.Host.Application" Version="7.4.2" />
+    <PackageReference Include="Volo.Saas.Host.HttpApi" Version="7.4.2" />
+    <PackageReference Include="Volo.Saas.EntityFrameworkCore" Version="7.4.2" />
+    <PackageReference Include="Volo.Abp.BlobStoring.Database.EntityFrameworkCore" Version="7.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\CompetencyEvaluator.HttpApi\CompetencyEvaluator.HttpApi.csproj" />
+    <ProjectReference Include="..\..\src\CompetencyEvaluator.Application\CompetencyEvaluator.Application.csproj" />
+    <ProjectReference Include="..\..\src\CompetencyEvaluator.EntityFrameworkCore\CompetencyEvaluator.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\..\src\CompetencyEvaluator.Web\CompetencyEvaluator.Web.csproj" />
+    <ProjectReference Include="..\CompetencyEvaluator.Host.Shared\CompetencyEvaluator.Host.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Logs\**" />
+    <Content Remove="Logs\**" />
+    <EmbeddedResource Remove="Logs\**" />
+    <None Remove="Logs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CompetencyEvaluator.AuthServer\Seed\CompetencyEvaluatorSampleIdentityDataSeeder.cs">
+      <Link>Seed\CompetencyEvaluatorSampleIdentityDataSeeder.cs</Link>
+    </Compile>
+    <Compile Include="..\CompetencyEvaluator.HttpApi.Host\Seed\CompetencyEvaluatorSampleDataSeeder.cs" Link="Seed\CompetencyEvaluatorSampleDataSeeder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Pages\**\*.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Pages\**\*.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

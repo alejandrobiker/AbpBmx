@@ -1,0 +1,273 @@
+<abp-page [title]="title | abpLocalization">
+  <abp-page-toolbar-container class="col">
+    <!--<suite-custom-code-block-0>-->
+    <!--</suite-custom-code-block-0>-->
+    <div class="text-lg-end pt-2">
+      <!--<suite-custom-code-block-1>-->
+      <!--</suite-custom-code-block-1>-->
+
+      <button
+        class="btn btn-primary btn-sm mx-2"
+        type="button"
+        [disabled]="service.isExportToExcelBusy"
+        (click)="exportToExcel()"
+      >
+        {{ 'CompetencyEvaluator::ExportToExcel' | abpLocalization }}
+      </button>
+
+      <button
+        *abpPermission="'CompetencyEvaluator.Athletes.Create'"
+        class="btn btn-primary btn-sm"
+        type="button"
+        (click)="create()"
+      >
+        <i class="fa fa-plus me-1" aria-hidden="true"></i>
+        {{ 'CompetencyEvaluator::NewAthlete' | abpLocalization }}
+      </button>
+      <!--<suite-custom-code-block-2>-->
+      <!--</suite-custom-code-block-2>-->
+    </div>
+  </abp-page-toolbar-container>
+
+  <abp-advanced-entity-filters localizationSourceName="CompetencyEvaluator" [list]="list">
+    <abp-advanced-entity-filters-form *ngIf="service.filters as filters">
+      <form #filterForm (keyup.enter)="list.get()">
+        <!--<suite-custom-code-block-3>-->
+        <!--</suite-custom-code-block-3>-->
+        <div class="row">
+          <div class="col-12 col-sm-auto">
+            <div class="mb-3">
+              <label class="form-label" for="nameFilter">
+                {{ 'CompetencyEvaluator::Name' | abpLocalization }}
+              </label>
+
+              <input
+                id="nameFilter"
+                class="form-control"
+                [(ngModel)]="filters.name"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <div class="mb-3">
+              <label class="form-label" for="minDateOfBirth">
+                {{ 'CompetencyEvaluator::MinDateOfBirth' | abpLocalization }}
+              </label>
+
+              <div class="input-group" validationTarget>
+                <input
+                  id="minDateOfBirth"
+                  class="form-control"
+                  #minDateOfBirthInput
+                  #minDateOfBirthDatepicker="ngbDatepicker"
+                  name="minDateOfBirth"
+                  ngbDatepicker
+                  container="body"
+                  readonly
+                  (click)="minDateOfBirthDatepicker.toggle()"
+                  (keyup.space)="minDateOfBirthDatepicker.toggle()"
+                  [(ngModel)]="filters.dateOfBirthMin"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <div *ngIf="minDateOfBirthInput.value" class="input-group-append">
+                  <button
+                    class="btn btn-link px-2"
+                    type="button"
+                    [title]="'AbpUi::Clear' | abpLocalization"
+                    (click)="
+                      minDateOfBirthDatepicker.writeValue(null);
+                      minDateOfBirthDatepicker.manualDateChange(null, true)
+                    "
+                  >
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-auto">
+            <div class="mb-3">
+              <label class="form-label" for="maxDateOfBirth">
+                {{ 'CompetencyEvaluator::MaxDateOfBirth' | abpLocalization }}
+              </label>
+
+              <div class="input-group" validationTarget>
+                <input
+                  id="maxDateOfBirth"
+                  class="form-control"
+                  #maxDateOfBirthInput
+                  #maxDateOfBirthDatepicker="ngbDatepicker"
+                  name="maxDateOfBirth"
+                  ngbDatepicker
+                  readonly
+                  (click)="maxDateOfBirthDatepicker.toggle()"
+                  (keyup.space)="maxDateOfBirthDatepicker.toggle()"
+                  [(ngModel)]="filters.dateOfBirthMax"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <div *ngIf="maxDateOfBirthInput.value" class="input-group-append">
+                  <button
+                    class="btn btn-link px-2"
+                    type="button"
+                    [title]="'AbpUi::Clear' | abpLocalization"
+                    (click)="
+                      maxDateOfBirthDatepicker.writeValue(null);
+                      maxDateOfBirthDatepicker.manualDateChange(null, true)
+                    "
+                  >
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <div class="mb-3">
+              <label class="form-label" for="genderIdFilter">
+                {{ 'CompetencyEvaluator::Gender' | abpLocalization }}
+              </label>
+              <abp-lookup-select
+                cid="genderIdFilter"
+                [getFn]="serviceDetail.getGenderLookup"
+                [(ngModel)]="filters.genderId"
+                [ngModelOptions]="{ standalone: true }"
+              ></abp-lookup-select>
+            </div>
+          </div>
+          <div class="col-12 col-sm-auto">
+            <div class="mb-3">
+              <label class="form-label" for="categoryIdFilter">
+                {{ 'CompetencyEvaluator::Category' | abpLocalization }}
+              </label>
+              <abp-lookup-select
+                cid="categoryIdFilter"
+                [getFn]="serviceDetail.getCategoryLookup"
+                [(ngModel)]="filters.categoryId"
+                [ngModelOptions]="{ standalone: true }"
+              ></abp-lookup-select>
+            </div>
+          </div>
+
+          <div class="col-12 col-sm-auto align-self-end mb-3">
+            <div class="row">
+              <div class="col-6 col-sm-auto d-grid">
+                <button type="button" class="btn btn-outline-primary" (click)="clearFilters()">
+                  <span>{{ 'AbpUi::Clear' | abpLocalization }}</span>
+                </button>
+              </div>
+              <div class="col-6 col-sm-auto d-grid">
+                <button type="button" class="btn btn-primary" (click)="list.get()">
+                  <span>{{ 'AbpUi::Refresh' | abpLocalization }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--<suite-custom-code-block-4>-->
+        <!--</suite-custom-code-block-4>-->
+      </form>
+    </abp-advanced-entity-filters-form>
+  </abp-advanced-entity-filters>
+  <!--<suite-custom-code-block-5>-->
+  <!--</suite-custom-code-block-5>-->
+  <div class="card">
+    <!--<suite-custom-code-block-6>-->
+    <!--</suite-custom-code-block-6>-->
+    <div class="card-body">
+      <!--<suite-custom-code-block-7>-->
+      <!--</suite-custom-code-block-7>-->
+      <ngx-datatable
+        [rows]="service.data.items"
+        [count]="service.data.totalCount"
+        [list]="list"
+        default
+      >
+        <!--<suite-custom-code-block-8>-->
+        <!--</suite-custom-code-block-8>-->
+        <ngx-datatable-column
+          [name]="'AbpUi::Actions' | abpLocalization"
+          [maxWidth]="150"
+          [width]="150"
+          [sortable]="false"
+        >
+          <ng-template let-row="row" let-i="rowIndex" ngx-datatable-cell-template>
+            <div ngbDropdown container="body" class="d-inline-block">
+              <button
+                class="btn btn-primary btn-sm dropdown-toggle"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                ngbDropdownToggle
+              >
+                <i class="fa fa-cog me-1" aria-hidden="true"></i>
+                {{ 'AbpUi::Actions' | abpLocalization }}
+              </button>
+
+              <div ngbDropdownMenu>
+                <button
+                  ngbDropdownItem
+                  *abpPermission="'CompetencyEvaluator.Athletes.Edit'"
+                  (click)="update(row)"
+                >
+                  {{ 'AbpUi::Edit' | abpLocalization }}
+                </button>
+
+                <button
+                  ngbDropdownItem
+                  *abpPermission="'CompetencyEvaluator.Athletes.Delete'"
+                  (click)="delete(row)"
+                >
+                  {{ 'AbpUi::Delete' | abpLocalization }}
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'CompetencyEvaluator::Name' | abpLocalization }}"
+          prop="athlete.name"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.athlete.name }}
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          name="{{ 'CompetencyEvaluator::DateOfBirth' | abpLocalization }}"
+          prop="athlete.dateOfBirth"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.athlete.dateOfBirth | date }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          name="{{ 'CompetencyEvaluator::Gender' | abpLocalization }}"
+          prop="gender.name"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.gender?.name }}
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          name="{{ 'CompetencyEvaluator::Category' | abpLocalization }}"
+          prop="category.name"
+        >
+          <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ row.category?.name }}
+          </ng-template>
+        </ngx-datatable-column>
+        <!--<suite-custom-code-block-9>-->
+        <!--</suite-custom-code-block-9>-->
+      </ngx-datatable>
+      <!--<suite-custom-code-block-10>-->
+      <!--</suite-custom-code-block-10>-->
+    </div>
+  </div>
+  <!--<suite-custom-code-block-11>-->
+  <!--</suite-custom-code-block-11>-->
+</abp-page>
+<!--<suite-custom-code-block-12>-->
+<!--</suite-custom-code-block-12>-->
+<lib-athlete-detail> </lib-athlete-detail>

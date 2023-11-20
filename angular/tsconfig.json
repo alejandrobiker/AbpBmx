@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.prod.json",
+  "compilerOptions": {
+    "paths": {
+      "@competency-evaluator": [
+        "projects/competency-evaluator/src/public-api.ts"
+      ],
+      "@competency-evaluator/config": [
+        "projects/competency-evaluator/config/src/public-api.ts"
+      ],
+      "@proxy": ["projects/competency-evaluator/src/lib/proxy/index.ts"],
+      "@proxy/*": ["projects/competency-evaluator/src/lib/proxy/*"]
+    }
+  }
+}

@@ -1,0 +1,677 @@
+@page "/CompetencyEvaluator/Evaluation1s"
+
+
+
+@attribute [Authorize(CompetencyEvaluatorPermissions.Evaluation1s.Default)]
+@using global::CompetencyEvaluator.Evaluation1s
+@using global::CompetencyEvaluator.Localization
+@using global::CompetencyEvaluator.Shared
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using Microsoft.AspNetCore.Components.Web
+@using Blazorise
+@using Blazorise.Components
+@using Blazorise.DataGrid
+@using Volo.Abp.BlazoriseUI
+@using Volo.Abp.BlazoriseUI.Components
+@using Volo.Abp.ObjectMapping
+@using Volo.Abp.AspNetCore.Components.Messages
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using global::CompetencyEvaluator.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.Http.Client
+@inherits CompetencyEvaluatorComponentBase
+@inject IEvaluation1sAppService Evaluation1sAppService
+@inject IUiMessageService UiMessageService
+@inject IRemoteServiceConfigurationProvider RemoteServiceConfigurationProvider
+@inject NavigationManager NavigationManager
+
+@* ************************* PAGE HEADER ************************* *@
+<PageHeader Title="@L["Evaluation1s"]" BreadcrumbItems="BreadcrumbItems" Toolbar="Toolbar">
+
+</PageHeader>
+
+@* ************************* SEARCH ************************* *@
+<Card>
+    <CardBody>
+@*//<suite-custom-code-block-1>*@
+@*//</suite-custom-code-block-1>*@
+        <Form id="Evaluation1SearchForm" class="mb-3">
+            <Addons>
+                <Addon AddonType="AddonType.Body">
+                    <TextEdit @bind-Text="@Filter.FilterText"
+                              Autofocus="true"
+                              Placeholder="@L["Search"]">
+                    </TextEdit>
+                </Addon>
+                <Addon AddonType="AddonType.End">
+                    <SubmitButton Form="Evaluation1SearchForm" Clicked="GetEvaluation1sAsync">
+                        <Icon Name="IconName.Search" Class="me-1"></Icon>@L["Search"]
+                    </SubmitButton>
+                </Addon>
+            </Addons>
+        </Form>
+        
+        <Row Class="mt-3 mb-3"> 
+            <div class="col-md-12">
+                <a href="javascript:;" class="text-decoration-none" @onclick="() => ShowAdvancedFilters = !ShowAdvancedFilters">@L["SeeAdvancedFilters"]</a>
+            </div>
+        </Row>
+        
+        <div style="display: @(!ShowAdvancedFilters ? "none" : "block")">
+            <Row>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_1_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_1_R1Min"
+             ValueChanged="@OnCriterio_1_R1MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_1_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_1_R1Max"
+             ValueChanged="@OnCriterio_1_R1MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_1_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_1_R2Min"
+             ValueChanged="@OnCriterio_1_R2MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_1_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_1_R2Max"
+             ValueChanged="@OnCriterio_1_R2MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_2_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_2_R1Min"
+             ValueChanged="@OnCriterio_2_R1MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_2_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_2_R1Max"
+             ValueChanged="@OnCriterio_2_R1MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_2_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_2_R2Min"
+             ValueChanged="@OnCriterio_2_R2MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_2_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_2_R2Max"
+             ValueChanged="@OnCriterio_2_R2MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_3_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_3_R1Min"
+             ValueChanged="@OnCriterio_3_R1MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_3_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_3_R1Max"
+             ValueChanged="@OnCriterio_3_R1MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_3_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_3_R2Min"
+             ValueChanged="@OnCriterio_3_R2MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_3_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_3_R2Max"
+             ValueChanged="@OnCriterio_3_R2MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_4_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_4_R1Min"
+             ValueChanged="@OnCriterio_4_R1MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_4_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_4_R1Max"
+             ValueChanged="@OnCriterio_4_R1MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinCriterio_4_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_4_R2Min"
+             ValueChanged="@OnCriterio_4_R2MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxCriterio_4_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Criterio_4_R2Max"
+             ValueChanged="@OnCriterio_4_R2MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinResultado_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Resultado_R1Min"
+             ValueChanged="@OnResultado_R1MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxResultado_R1"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Resultado_R1Max"
+             ValueChanged="@OnResultado_R1MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MinResultado_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Resultado_R2Min"
+             ValueChanged="@OnResultado_R2MinChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["MaxResultado_R2"]</FieldLabel>
+                        <NumericEdit TValue="double?" 
+             Value="@Filter.Resultado_R2Max"
+             ValueChanged="@OnResultado_R2MaxChangedAsync" />                       
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is3">
+                    <Field>
+                        <FieldLabel>@L["Athlete"]</FieldLabel>
+                        <Select TValue="Guid?"
+		SelectedValue="@Filter.AthleteId"
+		SelectedValueChanged="@OnAthleteIdChangedAsync">
+
+<SelectItem></SelectItem>
+
+@foreach(var item in AthletesCollection)
+{
+	<SelectItem TValue="Guid" Value="@item.Id">
+		@item.DisplayName
+	</SelectItem>
+}
+
+</Select>                       
+                    </Field>
+                </Column>
+            </Row>
+@*//<suite-custom-code-block-2>*@
+@*//</suite-custom-code-block-2>*@
+        </div>
+@*//<suite-custom-code-block-3>*@
+@*//</suite-custom-code-block-3>*@
+    </CardBody>
+</Card>
+
+@* ************************* DATA GRID ************************* *@
+<Card>
+    <CardBody>
+        <DataGrid TItem="Evaluation1WithNavigationPropertiesDto"
+                  Data="Evaluation1List"
+                  ReadData="OnDataGridReadAsync"
+                  TotalItems="TotalCount"
+                  ShowPager="true"
+                  Responsive="true"
+                  PageSize="PageSize">
+            <DataGridColumns>
+                <DataGridEntityActionsColumn TItem="Evaluation1WithNavigationPropertiesDto" @ref="@EntityActionsColumn">
+                    <DisplayTemplate>
+                        <EntityActions TItem="Evaluation1WithNavigationPropertiesDto" EntityActionsColumn="@EntityActionsColumn">
+                            <EntityAction TItem="Evaluation1WithNavigationPropertiesDto"
+                                          Visible="@CanEditEvaluation1"
+                                          Clicked="async () => await OpenEditEvaluation1ModalAsync(context)"
+                                          Text="@L["Edit"]"></EntityAction>
+                            <EntityAction TItem="Evaluation1WithNavigationPropertiesDto"
+                                          Visible="@CanDeleteEvaluation1"
+                                          Clicked="() => DeleteEvaluation1Async(context)"
+                                          ConfirmationMessage="@(()=> L["DeleteConfirmationMessage"])"
+                                          Text="@L["Delete"]"></EntityAction>
+@*//<suite-custom-code-block-4>*@
+@*//</suite-custom-code-block-4>*@
+                        </EntityActions>
+                    </DisplayTemplate>
+                </DataGridEntityActionsColumn>
+               
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_1_R1"
+                      Caption="@L["Criterio_1_R1"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_1_R2"
+                      Caption="@L["Criterio_1_R2"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_2_R1"
+                      Caption="@L["Criterio_2_R1"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_2_R2"
+                      Caption="@L["Criterio_2_R2"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_3_R1"
+                      Caption="@L["Criterio_3_R1"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_3_R2"
+                      Caption="@L["Criterio_3_R2"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_4_R1"
+                      Caption="@L["Criterio_4_R1"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Criterio_4_R2"
+                      Caption="@L["Criterio_4_R2"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Resultado_R1"
+                      Caption="@L["Resultado_R1"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Evaluation1.Resultado_R2"
+                      Caption="@L["Resultado_R2"]">
+              </DataGridColumn>
+
+              <DataGridColumn TItem="Evaluation1WithNavigationPropertiesDto"
+                      Field="Athlete.Name"
+                      Caption="@L["Athlete"]">
+              </DataGridColumn>
+
+            </DataGridColumns>
+        </DataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+<Modal @ref="CreateEvaluation1Modal" Closing="@CreateEvaluation1Modal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-5>*@
+@*//</suite-custom-code-block-5>*@
+        <Form id="CreateEvaluation1Form">
+            <ModalHeader>
+                <ModalTitle>@L["NewEvaluation1"]</ModalTitle>
+                <CloseButton Clicked="CloseCreateEvaluation1ModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@NewEvaluation1Validations"
+                            Mode="ValidationMode.Auto"
+                            Model="@NewEvaluation1"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_1_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_1_R1"  Min="Evaluation1Consts.Criterio_1_R1MinLength" Max="Evaluation1Consts.Criterio_1_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_1_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_1_R2"  Min="Evaluation1Consts.Criterio_1_R2MinLength" Max="Evaluation1Consts.Criterio_1_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_2_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_2_R1"  Min="Evaluation1Consts.Criterio_2_R1MinLength" Max="Evaluation1Consts.Criterio_2_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_2_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_2_R2"  Min="Evaluation1Consts.Criterio_2_R2MinLength" Max="Evaluation1Consts.Criterio_2_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_3_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_3_R1"  Min="Evaluation1Consts.Criterio_3_R1MinLength" Max="Evaluation1Consts.Criterio_3_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_3_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_3_R2"  Min="Evaluation1Consts.Criterio_3_R2MinLength" Max="Evaluation1Consts.Criterio_3_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_4_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_4_R1"  Min="Evaluation1Consts.Criterio_4_R1MinLength" Max="Evaluation1Consts.Criterio_4_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_4_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Criterio_4_R2"  Min="Evaluation1Consts.Criterio_4_R2MinLength" Max="Evaluation1Consts.Criterio_4_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Resultado_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Resultado_R1"   >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Resultado_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@NewEvaluation1.Resultado_R2"   >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["Athlete"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewEvaluation1.AthleteId">
+                            @foreach (var athlete in AthletesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@athlete.Id">
+                                    @athlete.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseCreateEvaluation1ModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="CreateEvaluation1Form" Clicked="CreateEvaluation1Async" />
+@*//<suite-custom-code-block-6>*@
+@*//</suite-custom-code-block-6>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-7>*@
+@*//</suite-custom-code-block-7>*@
+    </ModalContent>
+</Modal>
+
+@* ************************* EDIT MODAL ************************* *@
+<Modal @ref="EditEvaluation1Modal" Closing="@EditEvaluation1Modal.CancelClosingModalWhenFocusLost">
+    <ModalContent Centered="true">
+@*//<suite-custom-code-block-8>*@
+@*//</suite-custom-code-block-8>*@
+        <Form id="EditEvaluation1Form">
+            <ModalHeader>
+                <ModalTitle>@L["Update"]</ModalTitle>
+                <CloseButton Clicked="CloseEditEvaluation1ModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="@EditingEvaluation1Validations"
+                            Mode="ValidationMode.Auto"
+                            Model="@EditingEvaluation1"
+                            ValidateOnLoad="false">
+                     
+                    
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_1_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_1_R1"  Min="Evaluation1Consts.Criterio_1_R1MinLength" Max="Evaluation1Consts.Criterio_1_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_1_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_1_R2"  Min="Evaluation1Consts.Criterio_1_R2MinLength" Max="Evaluation1Consts.Criterio_1_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_2_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_2_R1"  Min="Evaluation1Consts.Criterio_2_R1MinLength" Max="Evaluation1Consts.Criterio_2_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_2_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_2_R2"  Min="Evaluation1Consts.Criterio_2_R2MinLength" Max="Evaluation1Consts.Criterio_2_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_3_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_3_R1"  Min="Evaluation1Consts.Criterio_3_R1MinLength" Max="Evaluation1Consts.Criterio_3_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_3_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_3_R2"  Min="Evaluation1Consts.Criterio_3_R2MinLength" Max="Evaluation1Consts.Criterio_3_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_4_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_4_R1"  Min="Evaluation1Consts.Criterio_4_R1MinLength" Max="Evaluation1Consts.Criterio_4_R1MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Criterio_4_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Criterio_4_R2"  Min="Evaluation1Consts.Criterio_4_R2MinLength" Max="Evaluation1Consts.Criterio_4_R2MaxLength"  >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Resultado_R1"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Resultado_R1"   >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Validation>
+                        <Field>
+                            <FieldLabel>@L["Resultado_R2"]</FieldLabel>
+                            <NumericPicker TValue="double" @bind-Value="@EditingEvaluation1.Resultado_R2"   >
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                             </NumericPicker>
+                        </Field>
+                     </Validation>
+
+
+                    <Field>
+                        <FieldLabel>@L["Athlete"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingEvaluation1.AthleteId">
+                            @foreach (var athlete in AthletesCollection)
+                            {
+                                <SelectItem TValue="Guid" Value="@athlete.Id">
+                                    @athlete.DisplayName
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
+
+
+                    
+                    
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditEvaluation1ModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <SubmitButton Form="EditEvaluation1Form" Clicked="UpdateEvaluation1Async" />
+@*//<suite-custom-code-block-9>*@
+@*//</suite-custom-code-block-9>*@
+            </ModalFooter>
+        </Form>
+@*//<suite-custom-code-block-10>*@
+@*//</suite-custom-code-block-10>*@
+    </ModalContent>
+</Modal>
